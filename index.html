@@ -203,16 +203,32 @@
           <div class="form-section">
             <h3 class="form-section-title">連絡先</h3>
             <div class="form-group">
-              <label for="field-phone">電話番号</label>
-              <input type="tel" id="field-phone" placeholder="03-1234-5678">
+              <label>電話番号 1</label>
+              <div style="display: flex; gap: 8px;">
+                <input type="text" id="field-phone1-label" placeholder="代表/携帯/FAX" style="width: 35%;">
+                <input type="tel" id="field-phone1" placeholder="03-1234-5678" style="flex: 1;">
+              </div>
             </div>
             <div class="form-group">
-              <label for="field-mobile">携帯番号</label>
-              <input type="tel" id="field-mobile" placeholder="090-1234-5678">
+              <label>電話番号 2</label>
+              <div style="display: flex; gap: 8px;">
+                <input type="text" id="field-phone2-label" placeholder="直通/携帯/FAX" style="width: 35%;">
+                <input type="tel" id="field-phone2" placeholder="090-1234-5678" style="flex: 1;">
+              </div>
             </div>
             <div class="form-group">
-              <label for="field-fax">FAX番号</label>
-              <input type="tel" id="field-fax" placeholder="03-1234-5679">
+              <label>電話番号 3</label>
+              <div style="display: flex; gap: 8px;">
+                <input type="text" id="field-phone3-label" placeholder="ラベル" style="width: 35%;">
+                <input type="tel" id="field-phone3" placeholder="番号" style="flex: 1;">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>電話番号 4</label>
+              <div style="display: flex; gap: 8px;">
+                <input type="text" id="field-phone4-label" placeholder="ラベル" style="width: 35%;">
+                <input type="tel" id="field-phone4" placeholder="番号" style="flex: 1;">
+              </div>
             </div>
             <div class="form-group">
               <label for="field-email">メールアドレス</label>
@@ -358,6 +374,6 @@
     <canvas id="capture-canvas" style="display:none;"></canvas>
   </div>
 
-  <script src="app.js?v=9"></script>
+  <script src="app.js?v=10"></script>
 </body>
 </html>

@@ -667,8 +667,18 @@
         populateEditForm(parsed);
 
         // サムネイル設定
-        if (state.capturedImages.front) dom.thumbFront.src = state.capturedImages.front;
-        if (state.capturedImages.back) dom.thumbBack.src = state.capturedImages.back;
+        if (state.capturedImages.front) {
+          dom.thumbFront.src = state.capturedImages.front;
+          dom.thumbFront.parentElement.style.display = 'flex';
+        } else {
+          dom.thumbFront.parentElement.style.display = 'none';
+        }
+        if (state.capturedImages.back) {
+          dom.thumbBack.src = state.capturedImages.back;
+          dom.thumbBack.parentElement.style.display = 'flex';
+        } else {
+          dom.thumbBack.parentElement.style.display = 'none';
+        }
 
         navigateTo('screen-edit');
       }, 600);

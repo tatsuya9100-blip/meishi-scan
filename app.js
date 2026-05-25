@@ -41,90 +41,120 @@
   };
 
   // ========================================
-  // DOM要素参照
+  // DOM要素参照（init時に取得）
   // ========================================
   const $ = (sel) => document.querySelector(sel);
   const $$ = (sel) => document.querySelectorAll(sel);
 
-  const dom = {
-    // ヘッダー
-    btnBack: $('#btn-back'),
-    headerTitle: $('#header-title'),
-    // 画面
-    screens: {
-      home: $('#screen-home'),
-      capture: $('#screen-capture'),
-      processing: $('#screen-processing'),
-      edit: $('#screen-edit'),
-      detail: $('#screen-detail'),
-      settings: $('#screen-settings')
-    },
-    // ホーム
-    searchInput: $('#search-input'),
-    btnClearSearch: $('#btn-clear-search'),
-    kanaTabs: $('#kana-tabs'),
-    contactList: $('#contact-list'),
-    emptyState: $('#empty-state'),
-    btnScan: $('#btn-scan'),
-    // 撮影
-    captureStepLabel: $('#capture-step-label'),
-    cameraVideo: $('#camera-video'),
-    previewImage: $('#preview-image'),
-    btnShutter: $('#btn-shutter'),
-    btnFileUpload: $('#btn-file-upload'),
-    btnSwitchCamera: $('#btn-switch-camera'),
-    fileInput: $('#file-input'),
-    postCaptureActions: $('#post-capture-actions'),
-    btnRetake: $('#btn-retake'),
-    btnUsePhoto: $('#btn-use-photo'),
-    btnSkipBack: $('#btn-skip-back'),
-    captureCanvas: $('#capture-canvas'),
-    // OCR処理中
-    ocrProgress: $('#ocr-progress'),
-    ocrStatus: $('#ocr-status'),
-    // 編集
-    thumbFront: $('#thumb-front'),
-    thumbBack: $('#thumb-back'),
-    thumbBackWrap: $('#thumb-back-wrap'),
-    contactForm: $('#contact-form'),
-    btnCancelEdit: $('#btn-cancel-edit'),
-    btnSaveContact: $('#btn-save-contact'),
-    // 詳細
-    detailAvatar: $('#detail-avatar'),
-    detailName: $('#detail-name'),
-    detailKana: $('#detail-kana'),
-    detailCompany: $('#detail-company'),
-    detailInfoList: $('#detail-info-list'),
-    detailActionCall: $('#detail-action-call'),
-    detailActionEmail: $('#detail-action-email'),
-    detailActionMap: $('#detail-action-map'),
-    btnEditContact: $('#btn-edit-contact'),
-    btnDeleteContact: $('#btn-delete-contact'),
-    // モーダル
-    modalCalendar: $('#modal-calendar'),
-    modalExchangeDate: $('#modal-exchange-date'),
-    btnCalendarYes: $('#btn-calendar-yes'),
-    btnCalendarNo: $('#btn-calendar-no'),
-    modalDelete: $('#modal-delete'),
-    btnDeleteCancel: $('#btn-delete-cancel'),
-    btnDeleteConfirm: $('#btn-delete-confirm'),
-    // トースト
-    toast: $('#toast'),
-    toastMessage: $('#toast-message'),
-    // 設定
-    btnSettings: $('#btn-settings'),
-    fieldApiKey: $('#field-api-key'),
-    btnSaveSettings: $('#btn-save-settings')
-  };
+  let dom = {};
+
+  function setupDOM() {
+    dom = {
+      // ヘッダー
+      btnBack: $('#btn-back'),
+      headerTitle: $('#header-title'),
+      // 画面
+      screens: {
+        home: $('#screen-home'),
+        capture: $('#screen-capture'),
+        processing: $('#screen-processing'),
+        edit: $('#screen-edit'),
+        detail: $('#screen-detail'),
+        settings: $('#screen-settings')
+      },
+      // ホーム
+      searchInput: $('#search-input'),
+      btnClearSearch: $('#btn-clear-search'),
+      kanaTabs: $('#kana-tabs'),
+      contactList: $('#contact-list'),
+      emptyState: $('#empty-state'),
+      btnScan: $('#btn-scan'),
+      // 撮影
+      captureStepLabel: $('#capture-step-label'),
+      cameraVideo: $('#camera-video'),
+      previewImage: $('#preview-image'),
+      btnShutter: $('#btn-shutter'),
+      btnFileUpload: $('#btn-file-upload'),
+      btnSwitchCamera: $('#btn-switch-camera'),
+      fileInput: $('#file-input'),
+      postCaptureActions: $('#post-capture-actions'),
+      btnRetake: $('#btn-retake'),
+      btnUsePhoto: $('#btn-use-photo'),
+      btnSkipBack: $('#btn-skip-back'),
+      captureCanvas: $('#capture-canvas'),
+      // OCR処理中
+      ocrProgress: $('#ocr-progress'),
+      ocrStatus: $('#ocr-status'),
+      // 編集
+      thumbFront: $('#thumb-front'),
+      thumbBack: $('#thumb-back'),
+      thumbBackWrap: $('#thumb-back-wrap'),
+      contactForm: $('#contact-form'),
+      btnCancelEdit: $('#btn-cancel-edit'),
+      btnSaveContact: $('#btn-save-contact'),
+      // 詳細
+      detailAvatar: $('#detail-avatar'),
+      detailName: $('#detail-name'),
+      detailKana: $('#detail-kana'),
+      detailCompany: $('#detail-company'),
+      detailInfoList: $('#detail-info-list'),
+      detailActionCall: $('#detail-action-call'),
+      detailActionEmail: $('#detail-action-email'),
+      detailActionMap: $('#detail-action-map'),
+      btnEditContact: $('#btn-edit-contact'),
+      btnDeleteContact: $('#btn-delete-contact'),
+      // モーダル
+      modalCalendar: $('#modal-calendar'),
+      modalExchangeDate: $('#modal-exchange-date'),
+      btnCalendarYes: $('#btn-calendar-yes'),
+      btnCalendarNo: $('#btn-calendar-no'),
+      modalDelete: $('#modal-delete'),
+      btnDeleteCancel: $('#btn-delete-cancel'),
+      btnDeleteConfirm: $('#btn-delete-confirm'),
+      // トースト
+      toast: $('#toast'),
+      toastMessage: $('#toast-message'),
+      // 設定
+      btnSettings: $('#btn-settings'),
+      fieldApiKey: $('#field-api-key'),
+      btnSaveSettings: $('#btn-save-settings')
+    };
+
+    // デバッグ：見つからない要素を検出
+    const missing = [];
+    for (const [key, val] of Object.entries(dom)) {
+      if (key === 'screens') {
+        for (const [sk, sv] of Object.entries(val)) {
+          if (!sv) missing.push('screens.' + sk);
+        }
+      } else {
+        if (!val) missing.push(key);
+      }
+    }
+    if (missing.length > 0) {
+      console.error('Missing DOM elements:', missing);
+    }
+  }
+
+  // 安全なイベント登録ヘルパー
+  function on(el, event, handler) {
+    if (el) el.addEventListener(event, handler);
+  }
 
   // ========================================
   // 初期化
   // ========================================
   function init() {
-    loadContacts();
-    renderContactList();
-    bindEvents();
-    setTodayAsDefault();
+    try {
+      setupDOM();
+      loadContacts();
+      renderContactList();
+      bindEvents();
+      setTodayAsDefault();
+    } catch (err) {
+      console.error('MeishiScan init error:', err);
+      alert('アプリ初期化エラー: ' + err.message);
+    }
   }
 
   function setTodayAsDefault() {
@@ -186,10 +216,10 @@
     }
 
     // 全画面を非表示
-    Object.values(dom.screens).forEach(s => s.classList.remove('active'));
+    Object.values(dom.screens || {}).forEach(s => { if (s) s.classList.remove('active'); });
 
     // 対象画面を表示
-    const screen = dom.screens[screenId.replace('screen-', '')];
+    const screen = (dom.screens || {})[screenId.replace('screen-', '')];
     if (screen) {
       screen.classList.add('active');
       // アニメーション再トリガー
@@ -202,14 +232,14 @@
 
     // 戻るボタンの表示制御
     if (screenId === 'screen-home') {
-      dom.btnBack.classList.add('hidden');
+      if (dom.btnBack) dom.btnBack.classList.add('hidden');
       state.navigationHistory = [];
     } else {
-      dom.btnBack.classList.remove('hidden');
+      if (dom.btnBack) dom.btnBack.classList.remove('hidden');
     }
 
     // FABの表示制御
-    dom.btnScan.style.display = screenId === 'screen-home' ? '' : 'none';
+    if (dom.btnScan) dom.btnScan.style.display = screenId === 'screen-home' ? '' : 'none';
 
     window.scrollTo(0, 0);
   }
@@ -233,16 +263,16 @@
   // ========================================
   function bindEvents() {
     // 戻るボタン
-    dom.btnBack.addEventListener('click', navigateBack);
+    on(dom.btnBack, 'click', navigateBack);
 
     // 設定ボタン
-    dom.btnSettings.addEventListener('click', () => {
-      dom.fieldApiKey.value = localStorage.getItem('gemini_api_key') || '';
+    on(dom.btnSettings, 'click', () => {
+      if (dom.fieldApiKey) dom.fieldApiKey.value = localStorage.getItem('gemini_api_key') || '';
       navigateTo('screen-settings');
     });
 
-    dom.btnSaveSettings.addEventListener('click', () => {
-      const key = dom.fieldApiKey.value.trim();
+    on(dom.btnSaveSettings, 'click', () => {
+      const key = dom.fieldApiKey ? dom.fieldApiKey.value.trim() : '';
       if (key) {
         localStorage.setItem('gemini_api_key', key);
         showToast('APIキーを保存しました');
@@ -260,7 +290,7 @@
     });
 
     // スキャンボタン
-    dom.btnScan.addEventListener('click', () => {
+    on(dom.btnScan, 'click', () => {
       state.captureStep = 1;
       state.capturedImages = { front: null, back: null };
       updateCaptureStepUI();
@@ -270,21 +300,21 @@
     });
 
     // 検索
-    dom.searchInput.addEventListener('input', (e) => {
+    on(dom.searchInput, 'input', (e) => {
       state.searchQuery = e.target.value;
-      dom.btnClearSearch.classList.toggle('hidden', !e.target.value);
+      if (dom.btnClearSearch) dom.btnClearSearch.classList.toggle('hidden', !e.target.value);
       renderContactList();
     });
 
-    dom.btnClearSearch.addEventListener('click', () => {
-      dom.searchInput.value = '';
+    on(dom.btnClearSearch, 'click', () => {
+      if (dom.searchInput) dom.searchInput.value = '';
       state.searchQuery = '';
-      dom.btnClearSearch.classList.add('hidden');
+      if (dom.btnClearSearch) dom.btnClearSearch.classList.add('hidden');
       renderContactList();
     });
 
     // ア行タブ
-    dom.kanaTabs.addEventListener('click', (e) => {
+    on(dom.kanaTabs, 'click', (e) => {
       const tab = e.target.closest('.kana-tab');
       if (!tab) return;
       $$('.kana-tab').forEach(t => t.classList.remove('active'));
@@ -294,13 +324,13 @@
     });
 
     // 撮影関連
-    dom.btnShutter.addEventListener('click', capturePhoto);
-    dom.btnFileUpload.addEventListener('click', () => dom.fileInput.click());
-    dom.fileInput.addEventListener('change', handleFileSelect);
-    dom.btnSwitchCamera.addEventListener('click', switchCamera);
-    dom.btnRetake.addEventListener('click', retakePhoto);
-    dom.btnUsePhoto.addEventListener('click', usePhoto);
-    dom.btnSkipBack.addEventListener('click', () => {
+    on(dom.btnShutter, 'click', capturePhoto);
+    on(dom.btnFileUpload, 'click', () => { if (dom.fileInput) dom.fileInput.click(); });
+    on(dom.fileInput, 'change', handleFileSelect);
+    on(dom.btnSwitchCamera, 'click', switchCamera);
+    on(dom.btnRetake, 'click', retakePhoto);
+    on(dom.btnUsePhoto, 'click', usePhoto);
+    on(dom.btnSkipBack, 'click', () => {
       state.capturedImages.back = null;
       stopCamera();
       navigateTo('screen-processing');
@@ -308,11 +338,11 @@
     });
 
     // 編集画面
-    dom.btnCancelEdit.addEventListener('click', () => navigateBack());
-    dom.contactForm.addEventListener('submit', handleSaveContact);
+    on(dom.btnCancelEdit, 'click', () => navigateBack());
+    on(dom.contactForm, 'submit', handleSaveContact);
 
     // 詳細画面
-    dom.btnEditContact.addEventListener('click', () => {
+    on(dom.btnEditContact, 'click', () => {
       if (state.viewingContactId) {
         state.editingContactId = state.viewingContactId;
         populateEditForm(getContact(state.viewingContactId));
@@ -320,19 +350,19 @@
       }
     });
 
-    dom.btnDeleteContact.addEventListener('click', () => {
-      dom.modalDelete.classList.remove('hidden');
+    on(dom.btnDeleteContact, 'click', () => {
+      if (dom.modalDelete) dom.modalDelete.classList.remove('hidden');
     });
 
     // 削除モーダル
-    dom.btnDeleteCancel.addEventListener('click', () => {
-      dom.modalDelete.classList.add('hidden');
+    on(dom.btnDeleteCancel, 'click', () => {
+      if (dom.modalDelete) dom.modalDelete.classList.add('hidden');
     });
 
-    dom.btnDeleteConfirm.addEventListener('click', () => {
+    on(dom.btnDeleteConfirm, 'click', () => {
       if (state.viewingContactId) {
         deleteContact(state.viewingContactId);
-        dom.modalDelete.classList.add('hidden');
+        if (dom.modalDelete) dom.modalDelete.classList.add('hidden');
         showToast('連絡先を削除しました');
         navigateTo('screen-home', false);
         state.navigationHistory = [];
@@ -341,19 +371,19 @@
     });
 
     // カレンダーモーダル
-    dom.btnCalendarYes.addEventListener('click', () => {
+    on(dom.btnCalendarYes, 'click', () => {
       const contact = getContact(state.viewingContactId || state.editingContactId);
       if (contact) {
         openGoogleCalendar(contact);
       }
-      dom.modalCalendar.classList.add('hidden');
+      if (dom.modalCalendar) dom.modalCalendar.classList.add('hidden');
       navigateTo('screen-home', false);
       state.navigationHistory = [];
       renderContactList();
     });
 
-    dom.btnCalendarNo.addEventListener('click', () => {
-      dom.modalCalendar.classList.add('hidden');
+    on(dom.btnCalendarNo, 'click', () => {
+      if (dom.modalCalendar) dom.modalCalendar.classList.add('hidden');
       navigateTo('screen-home', false);
       state.navigationHistory = [];
       renderContactList();
@@ -361,11 +391,11 @@
 
     // キーボードショートカット（Y/N）
     document.addEventListener('keydown', (e) => {
-      if (!dom.modalCalendar.classList.contains('hidden')) {
+      if (dom.modalCalendar && !dom.modalCalendar.classList.contains('hidden')) {
         if (e.key === 'y' || e.key === 'Y') {
-          dom.btnCalendarYes.click();
+          if (dom.btnCalendarYes) dom.btnCalendarYes.click();
         } else if (e.key === 'n' || e.key === 'N') {
-          dom.btnCalendarNo.click();
+          if (dom.btnCalendarNo) dom.btnCalendarNo.click();
         }
       }
     });

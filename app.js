@@ -520,7 +520,6 @@
     let infoHtml = '';
 
     // 以前のデータとの互換性対応
-    let phones = contact.phones || [];
     if (phones.length === 0) {
       if (contact.phone) phones.push({ label: '電話番号', number: contact.phone });
       if (contact.mobile) phones.push({ label: '携帯番号', number: contact.mobile });

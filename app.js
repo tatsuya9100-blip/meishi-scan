@@ -84,6 +84,7 @@
     // 編集
     thumbFront: $('#thumb-front'),
     thumbBack: $('#thumb-back'),
+    thumbBackWrap: $('#thumb-back-wrap'),
     contactForm: $('#contact-form'),
     btnCancelEdit: $('#btn-cancel-edit'),
     btnSaveContact: $('#btn-save-contact'),
@@ -393,6 +394,13 @@
           c.company, c.department, c.position,
           c.phone, c.mobile, c.email, c.address, c.memo
         ];
+        // phones配列内の番号も検索対象に追加
+        if (c.phones && Array.isArray(c.phones)) {
+          c.phones.forEach(p => {
+            if (p.number) fields.push(p.number);
+            if (p.label) fields.push(p.label);
+          });
+        }
         return fields.some(f => f && f.toLowerCase().includes(query));
       });
     }
@@ -462,7 +470,9 @@
     dom.detailCompany.textContent = company;
 
     // アクションバー
-    const phone = contact.phone || contact.mobile || '';
+    const phones = contact.phones || [];
+    const firstPhone = phones.length > 0 ? phones[0].number : '';
+    const phone = firstPhone || contact.phone || contact.mobile || '';
     dom.detailActionCall.href = phone ? `tel:${phone}` : '#';
     dom.detailActionCall.style.opacity = phone ? '1' : '0.3';
 
@@ -763,9 +773,9 @@ Markdownのバッククォート（\`\`\`json など）は不要です。必ず�
         }
         if (state.capturedImages.back) {
           dom.thumbBack.src = state.capturedImages.back;
-          dom.thumbBack.parentElement.style.display = 'flex';
+          if (dom.thumbBackWrap) dom.thumbBackWrap.classList.remove('hidden');
         } else {
-          dom.thumbBack.parentElement.style.display = 'none';
+          if (dom.thumbBackWrap) dom.thumbBackWrap.classList.add('hidden');
         }
 
         navigateTo('screen-edit');

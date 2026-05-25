@@ -817,6 +817,29 @@ body::before {
   min-height: 60px;
 }
 
+.inline-fields {
+  display: flex;
+  gap: 8px;
+}
+
+.inline-fields .label-input {
+  width: 35%;
+  flex-shrink: 0;
+}
+
+.inline-fields .value-input {
+  flex: 1;
+}
+
+.settings-title {
+  margin-top: 0;
+}
+
+.settings-desc {
+  text-align: left;
+  margin-bottom: 20px;
+}
+
 .form-actions {
   display: flex;
   gap: 12px;

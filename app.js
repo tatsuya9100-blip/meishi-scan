@@ -75,6 +75,7 @@
     postCaptureActions: $('#post-capture-actions'),
     btnRetake: $('#btn-retake'),
     btnUsePhoto: $('#btn-use-photo'),
+    btnSkipBack: $('#btn-skip-back'),
     captureCanvas: $('#capture-canvas'),
     // OCR処理中
     ocrProgress: $('#ocr-progress'),
@@ -275,6 +276,12 @@
     dom.btnSwitchCamera.addEventListener('click', switchCamera);
     dom.btnRetake.addEventListener('click', retakePhoto);
     dom.btnUsePhoto.addEventListener('click', usePhoto);
+    dom.btnSkipBack.addEventListener('click', () => {
+      state.capturedImages.back = null;
+      stopCamera();
+      navigateTo('screen-processing');
+      startOCR();
+    });
 
     // 編集画面
     dom.btnCancelEdit.addEventListener('click', () => navigateBack());
@@ -567,6 +574,7 @@
     dom.btnShutter.style.display = 'none';
     dom.btnFileUpload.style.display = 'none';
     dom.btnSwitchCamera.style.display = 'none';
+    dom.btnSkipBack.classList.add('hidden');
     stopCamera();
   }
 
@@ -576,6 +584,9 @@
     dom.btnShutter.style.display = '';
     dom.btnFileUpload.style.display = '';
     dom.btnSwitchCamera.style.display = '';
+    if (state.captureStep === 2) {
+      dom.btnSkipBack.classList.remove('hidden');
+    }
     startCamera();
   }
 
@@ -599,8 +610,10 @@
     const label = dom.captureStepLabel;
     if (state.captureStep === 1) {
       label.innerHTML = `<span class="step-badge">STEP 1</span><span class="step-text">名刺の表面を撮影してください</span>`;
+      dom.btnSkipBack.classList.add('hidden');
     } else {
       label.innerHTML = `<span class="step-badge">STEP 2</span><span class="step-text">名刺の裏面を撮影してください</span>`;
+      dom.btnSkipBack.classList.remove('hidden');
     }
   }
 

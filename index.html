@@ -2,378 +2,414 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="description" content="名刺を撮影して連絡先を管理するスマートフォン向けWebアプリ">
   <meta name="theme-color" content="#0a0a1a">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>MeishiScan - 名刺読み取りアプリ</title>
+
   <link rel="manifest" href="manifest.json">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=1.1">
+  <link rel="stylesheet" href="style.css?v=1.2">
 </head>
 <body>
   <div id="app">
-
-    <!-- ===== ヘッダー ===== -->
     <header id="app-header">
-      <button id="btn-back" class="header-btn hidden" aria-label="戻る">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+      <button id="btn-back" class="header-btn hidden" aria-label="戻る" type="button">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M19 12H5"/>
+          <path d="M12 19l-7-7 7-7"/>
+        </svg>
       </button>
+
       <h1 id="header-title">
-        <span class="logo-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M12 12a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/><path d="M6 20c0-2 2-4 6-4s6 2 6 4"/></svg>
+        <span class="logo-icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="4" width="20" height="16" rx="2"/>
+            <path d="M12 12a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+            <path d="M6 20c0-2 2-4 6-4s6 2 6 4"/>
+          </svg>
         </span>
         MeishiScan
       </h1>
+
       <div id="header-actions">
-        <button id="btn-settings" class="header-btn" aria-label="設定">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <button id="btn-settings" class="header-btn" aria-label="設定" type="button">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
         </button>
       </div>
     </header>
 
-    <!-- ===== 画面1: 連絡先一覧（ホーム） ===== -->
-    <section id="screen-home" class="screen active">
-      <!-- 検索バー -->
-      <div class="search-container">
-        <div class="search-bar">
-          <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-          <input type="text" id="search-input" placeholder="名前・会社名・電話番号で検索..." autocomplete="off">
-          <button id="btn-clear-search" class="btn-clear hidden" aria-label="クリア">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18"/><path d="M6 6l12 12"/></svg>
-          </button>
-        </div>
-      </div>
-
-      <!-- ア行タブ -->
-      <div class="kana-tabs-wrapper">
-        <div class="kana-tabs" id="kana-tabs">
-          <button class="kana-tab active" data-kana="all">全て</button>
-          <button class="kana-tab" data-kana="ア">ア行</button>
-          <button class="kana-tab" data-kana="カ">カ行</button>
-          <button class="kana-tab" data-kana="サ">サ行</button>
-          <button class="kana-tab" data-kana="タ">タ行</button>
-          <button class="kana-tab" data-kana="ナ">ナ行</button>
-          <button class="kana-tab" data-kana="ハ">ハ行</button>
-          <button class="kana-tab" data-kana="マ">マ行</button>
-          <button class="kana-tab" data-kana="ヤ">ヤ行</button>
-          <button class="kana-tab" data-kana="ラ">ラ行</button>
-          <button class="kana-tab" data-kana="ワ">ワ行</button>
-        </div>
-      </div>
-
-      <!-- 連絡先一覧 -->
-      <div id="contact-list" class="contact-list">
-        <!-- 動的に挿入 -->
-      </div>
-
-      <!-- 空状態 -->
-      <div id="empty-state" class="empty-state hidden">
-        <div class="empty-icon">
-          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M12 12a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/><path d="M6 20c0-2 2-4 6-4s6 2 6 4"/></svg>
-        </div>
-        <p class="empty-title">名刺がまだありません</p>
-        <p class="empty-desc">下のボタンから名刺を撮影して<br>連絡先を追加しましょう</p>
-      </div>
-
-      <!-- FAB（名刺撮影ボタン） -->
-      <button id="btn-scan" class="fab" aria-label="名刺を撮影">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-        <span>スキャン</span>
-      </button>
-    </section>
-
-    <!-- ===== 画面2: 名刺撮影 ===== -->
-    <section id="screen-capture" class="screen">
-      <div class="capture-container">
-        <div class="capture-step" id="capture-step-label">
-          <span class="step-badge">STEP 1</span>
-          <span class="step-text">名刺の表面を撮影してください</span>
-        </div>
-
-        <!-- カメラプレビュー -->
-        <div class="camera-preview-area">
-          <video id="camera-video" autoplay playsinline></video>
-          <div class="camera-overlay">
-            <div class="card-guide"></div>
-          </div>
-          <img id="preview-image" class="preview-image hidden" alt="プレビュー">
-        </div>
-
-        <!-- 撮影コントロール -->
-        <div class="capture-controls">
-          <button id="btn-file-upload" class="capture-btn secondary" aria-label="画像を選択">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-            <span>画像選択</span>
-          </button>
-          <button id="btn-shutter" class="capture-btn primary" aria-label="撮影">
-            <div class="shutter-ring">
-              <div class="shutter-inner"></div>
-            </div>
-          </button>
-          <button id="btn-switch-camera" class="capture-btn secondary" aria-label="カメラ切替">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 19H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h5"/><path d="M13 5h7a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-5"/><polyline points="16 3 19 6 16 9"/><polyline points="8 15 5 18 8 21"/></svg>
-            <span>切替</span>
-          </button>
-        </div>
-        <button id="btn-skip-back" class="skip-btn hidden">裏面がない場合はスキップ</button>
-        <input type="file" id="file-input" accept="image/*" capture="environment" class="hidden-file-input">
-
-        <!-- 撮影後のアクション -->
-        <div id="post-capture-actions" class="post-capture-actions hidden">
-          <button id="btn-retake" class="action-btn outline">撮り直す</button>
-          <button id="btn-use-photo" class="action-btn filled">この写真を使う</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===== 画面3: OCR処理中 ===== -->
-    <section id="screen-processing" class="screen">
-      <div class="processing-container">
-        <div class="processing-animation">
-          <div class="scan-line"></div>
-          <div class="card-silhouette">
-            <svg width="120" height="80" viewBox="0 0 120 80" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="5" y="5" width="110" height="70" rx="8"/><circle cx="35" cy="30" r="12"/><line x1="55" y1="20" x2="100" y2="20"/><line x1="55" y1="30" x2="95" y2="30"/><line x1="55" y1="40" x2="85" y2="40"/><line x1="20" y1="55" x2="100" y2="55"/><line x1="20" y1="65" x2="80" y2="65"/></svg>
-          </div>
-        </div>
-        <p class="processing-title">名刺を読み取り中...</p>
-        <div class="progress-bar-container">
-          <div class="progress-bar" id="ocr-progress"></div>
-        </div>
-        <p class="processing-status" id="ocr-status">文字認識エンジンを準備しています</p>
-      </div>
-    </section>
-
-    <!-- ===== 画面4: 認識結果編集 ===== -->
-    <section id="screen-edit" class="screen">
-      <div class="edit-container">
-        <div class="edit-header-card">
-          <div class="ocr-preview-thumbs">
-            <div class="thumb-item">
-              <span class="thumb-label">表面</span>
-              <img id="thumb-front" class="thumb-img" alt="表面">
-            </div>
-            <div class="thumb-item">
-              <span class="thumb-label">裏面</span>
-              <img id="thumb-back" class="thumb-img" alt="裏面">
-            </div>
+    <main id="app-main">
+      <!-- 画面1: 連絡先一覧 -->
+      <section id="screen-home" class="screen active" aria-labelledby="header-title">
+        <div class="search-container">
+          <div class="search-bar">
+            <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="8"/>
+              <path d="M21 21l-4.35-4.35"/>
+            </svg>
+            <input
+              type="text"
+              id="search-input"
+              name="search"
+              placeholder="名前・会社名・電話番号で検索..."
+              autocomplete="off"
+              inputmode="search"
+            >
+            <button id="btn-clear-search" class="btn-clear hidden" aria-label="クリア" type="button">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M18 6L6 18"/>
+                <path d="M6 6l12 12"/>
+              </svg>
+            </button>
           </div>
         </div>
 
-        <form id="contact-form" class="contact-form" autocomplete="off">
-          <div class="form-section">
-            <h3 class="form-section-title">基本情報</h3>
-            <div class="form-group">
-              <label for="field-sei">姓</label>
-              <input type="text" id="field-sei" placeholder="山田">
-            </div>
-            <div class="form-group">
-              <label for="field-mei">名</label>
-              <input type="text" id="field-mei" placeholder="太郎">
-            </div>
-            <div class="form-group">
-              <label for="field-sei-kana">姓（フリガナ）</label>
-              <input type="text" id="field-sei-kana" placeholder="ヤマダ">
-            </div>
-            <div class="form-group">
-              <label for="field-mei-kana">名（フリガナ）</label>
-              <input type="text" id="field-mei-kana" placeholder="タロウ">
-            </div>
+        <div class="kana-tabs-wrapper">
+          <div class="kana-tabs" id="kana-tabs" role="tablist" aria-label="頭文字で絞り込み">
+            <button class="kana-tab active" data-kana="all" type="button">全て</button>
+            <button class="kana-tab" data-kana="ア" type="button">ア行</button>
+            <button class="kana-tab" data-kana="カ" type="button">カ行</button>
+            <button class="kana-tab" data-kana="サ" type="button">サ行</button>
+            <button class="kana-tab" data-kana="タ" type="button">タ行</button>
+            <button class="kana-tab" data-kana="ナ" type="button">ナ行</button>
+            <button class="kana-tab" data-kana="ハ" type="button">ハ行</button>
+            <button class="kana-tab" data-kana="マ" type="button">マ行</button>
+            <button class="kana-tab" data-kana="ヤ" type="button">ヤ行</button>
+            <button class="kana-tab" data-kana="ラ" type="button">ラ行</button>
+            <button class="kana-tab" data-kana="ワ" type="button">ワ行</button>
+          </div>
+        </div>
+
+        <div id="contact-list" class="contact-list" aria-live="polite"></div>
+
+        <div id="empty-state" class="empty-state hidden">
+          <div class="empty-icon" aria-hidden="true">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="4" width="20" height="16" rx="2"/>
+              <path d="M12 12a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+              <path d="M6 20c0-2 2-4 6-4s6 2 6 4"/>
+            </svg>
+          </div>
+          <p class="empty-title">名刺がまだありません</p>
+          <p class="empty-desc">下のボタンから名刺を撮影して<br>連絡先を追加しましょう</p>
+        </div>
+
+        <button id="btn-scan" class="fab" aria-label="名刺を撮影" type="button">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+            <circle cx="12" cy="13" r="4"/>
+          </svg>
+          <span>スキャン</span>
+        </button>
+      </section>
+
+      <!-- 画面2: 名刺撮影 -->
+      <section id="screen-capture" class="screen" aria-label="名刺撮影">
+        <div class="capture-container">
+          <div class="capture-step" id="capture-step-label">
+            <span class="step-badge">STEP 1</span>
+            <span class="step-text">名刺の表面を撮影してください</span>
           </div>
 
-          <div class="form-section">
-            <h3 class="form-section-title">会社情報</h3>
-            <div class="form-group">
-              <label for="field-company">会社名</label>
-              <input type="text" id="field-company" placeholder="株式会社〇〇">
+          <div class="camera-preview-area">
+            <video id="camera-video" autoplay playsinline muted></video>
+            <div class="camera-overlay" aria-hidden="true">
+              <div class="card-guide"></div>
             </div>
-            <div class="form-group">
-              <label for="field-department">部署</label>
-              <input type="text" id="field-department" placeholder="営業部">
-            </div>
-            <div class="form-group">
-              <label for="field-position">役職</label>
-              <input type="text" id="field-position" placeholder="部長">
-            </div>
+            <img id="preview-image" class="preview-image hidden" alt="プレビュー">
           </div>
 
-          <div class="form-section">
-            <h3 class="form-section-title">連絡先</h3>
-            <div class="form-group">
-              <label>電話番号 1</label>
-              <div style="display: flex; gap: 8px;">
-                <input type="text" id="field-phone1-label" placeholder="代表/携帯/FAX" style="width: 35%;">
-                <input type="tel" id="field-phone1" placeholder="03-1234-5678" style="flex: 1;">
+          <div class="capture-controls">
+            <button id="btn-file-upload" class="capture-btn secondary" aria-label="画像を選択" type="button">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <polyline points="21 15 16 10 5 21"/>
+              </svg>
+              <span>画像選択</span>
+            </button>
+
+            <button id="btn-shutter" class="capture-btn primary" aria-label="撮影" type="button">
+              <div class="shutter-ring">
+                <div class="shutter-inner"></div>
+              </div>
+            </button>
+
+            <button id="btn-switch-camera" class="capture-btn secondary" aria-label="カメラ切替" type="button">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M11 19H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h5"/>
+                <path d="M13 5h7a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-5"/>
+                <polyline points="16 3 19 6 16 9"/>
+                <polyline points="8 15 5 18 8 21"/>
+              </svg>
+              <span>切替</span>
+            </button>
+          </div>
+
+          <button id="btn-skip-back" class="skip-btn hidden" type="button">裏面がない場合はスキップ</button>
+          <input type="file" id="file-input" accept="image/*" capture="environment" class="hidden-file-input">
+
+          <div id="post-capture-actions" class="post-capture-actions hidden">
+            <button id="btn-retake" class="action-btn outline" type="button">撮り直す</button>
+            <button id="btn-use-photo" class="action-btn filled" type="button">この写真を使う</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 画面3: OCR処理中 -->
+      <section id="screen-processing" class="screen" aria-label="OCR処理中">
+        <div class="processing-container">
+          <div class="processing-animation" aria-hidden="true">
+            <div class="scan-line"></div>
+            <div class="card-silhouette">
+              <svg width="120" height="80" viewBox="0 0 120 80" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="5" y="5" width="110" height="70" rx="8"/>
+                <circle cx="35" cy="30" r="12"/>
+                <line x1="55" y1="20" x2="100" y2="20"/>
+                <line x1="55" y1="30" x2="95" y2="30"/>
+                <line x1="55" y1="40" x2="85" y2="40"/>
+                <line x1="20" y1="55" x2="100" y2="55"/>
+                <line x1="20" y1="65" x2="80" y2="65"/>
+              </svg>
+            </div>
+          </div>
+          <p class="processing-title">名刺を読み取り中...</p>
+          <div class="progress-bar-container" aria-hidden="true">
+            <div class="progress-bar" id="ocr-progress"></div>
+          </div>
+          <p class="processing-status" id="ocr-status" aria-live="polite">文字認識エンジンを準備しています</p>
+        </div>
+      </section>
+
+      <!-- 画面4: 認識結果編集 -->
+      <section id="screen-edit" class="screen" aria-label="認識結果編集">
+        <div class="edit-container">
+          <div class="edit-header-card">
+            <div class="ocr-preview-thumbs">
+              <div class="thumb-item">
+                <span class="thumb-label">表面</span>
+                <img id="thumb-front" class="thumb-img" alt="表面">
+              </div>
+              <div class="thumb-item hidden" id="thumb-back-wrap">
+                <span class="thumb-label">裏面</span>
+                <img id="thumb-back" class="thumb-img" alt="裏面">
               </div>
             </div>
-            <div class="form-group">
-              <label>電話番号 2</label>
-              <div style="display: flex; gap: 8px;">
-                <input type="text" id="field-phone2-label" placeholder="直通/携帯/FAX" style="width: 35%;">
-                <input type="tel" id="field-phone2" placeholder="090-1234-5678" style="flex: 1;">
-              </div>
-            </div>
-            <div class="form-group">
-              <label>電話番号 3</label>
-              <div style="display: flex; gap: 8px;">
-                <input type="text" id="field-phone3-label" placeholder="ラベル" style="width: 35%;">
-                <input type="tel" id="field-phone3" placeholder="番号" style="flex: 1;">
-              </div>
-            </div>
-            <div class="form-group">
-              <label>電話番号 4</label>
-              <div style="display: flex; gap: 8px;">
-                <input type="text" id="field-phone4-label" placeholder="ラベル" style="width: 35%;">
-                <input type="tel" id="field-phone4" placeholder="番号" style="flex: 1;">
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="field-email">メールアドレス</label>
-              <input type="email" id="field-email" placeholder="taro@example.com">
-            </div>
-            <div class="form-group">
-              <label for="field-url">Webサイト</label>
-              <input type="url" id="field-url" placeholder="https://example.com">
-            </div>
           </div>
 
+          <form id="contact-form" class="contact-form" autocomplete="off" novalidate>
+            <div class="form-section">
+              <h2 class="form-section-title">基本情報</h2>
+              <div class="form-group">
+                <label for="field-sei">姓</label>
+                <input type="text" id="field-sei" name="sei" placeholder="山田" autocomplete="family-name">
+              </div>
+              <div class="form-group">
+                <label for="field-mei">名</label>
+                <input type="text" id="field-mei" name="mei" placeholder="太郎" autocomplete="given-name">
+              </div>
+              <div class="form-group">
+                <label for="field-sei-kana">姓（フリガナ）</label>
+                <input type="text" id="field-sei-kana" name="seiKana" placeholder="ヤマダ">
+              </div>
+              <div class="form-group">
+                <label for="field-mei-kana">名（フリガナ）</label>
+                <input type="text" id="field-mei-kana" name="meiKana" placeholder="タロウ">
+              </div>
+            </div>
+
+            <div class="form-section">
+              <h2 class="form-section-title">会社情報</h2>
+              <div class="form-group">
+                <label for="field-company">会社名</label>
+                <input type="text" id="field-company" name="company" placeholder="株式会社〇〇" autocomplete="organization">
+              </div>
+              <div class="form-group">
+                <label for="field-department">部署</label>
+                <input type="text" id="field-department" name="department" placeholder="営業部">
+              </div>
+              <div class="form-group">
+                <label for="field-position">役職</label>
+                <input type="text" id="field-position" name="position" placeholder="部長">
+              </div>
+            </div>
+
+            <div class="form-section">
+              <h2 class="form-section-title">連絡先</h2>
+
+              <div class="form-group">
+                <label for="field-phone1">電話番号 1</label>
+                <div class="inline-fields">
+                  <input type="text" id="field-phone1-label" name="phone1Label" placeholder="代表/携帯/FAX" class="label-input">
+                  <input type="tel" id="field-phone1" name="phone1" placeholder="03-1234-5678" class="value-input" inputmode="tel" autocomplete="tel-national">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="field-phone2">電話番号 2</label>
+                <div class="inline-fields">
+                  <input type="text" id="field-phone2-label" name="phone2Label" placeholder="直通/携帯/FAX" class="label-input">
+                  <input type="tel" id="field-phone2" name="phone2" placeholder="090-1234-5678" class="value-input" inputmode="tel" autocomplete="tel">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="field-phone3">電話番号 3</label>
+                <div class="inline-fields">
+                  <input type="text" id="field-phone3-label" name="phone3Label" placeholder="ラベル" class="label-input">
+                  <input type="tel" id="field-phone3" name="phone3" placeholder="番号" class="value-input" inputmode="tel">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="field-phone4">電話番号 4</label>
+                <div class="inline-fields">
+                  <input type="text" id="field-phone4-label" name="phone4Label" placeholder="ラベル" class="label-input">
+                  <input type="tel" id="field-phone4" name="phone4" placeholder="番号" class="value-input" inputmode="tel">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="field-email">メールアドレス</label>
+                <input type="email" id="field-email" name="email" placeholder="taro@example.com" autocomplete="email">
+              </div>
+
+              <div class="form-group">
+                <label for="field-url">Webサイト</label>
+                <input type="url" id="field-url" name="url" placeholder="https://example.com" autocomplete="url">
+              </div>
+            </div>
+
+            <div class="form-section">
+              <h2 class="form-section-title">住所</h2>
+              <div class="form-group">
+                <label for="field-postal">郵便番号</label>
+                <input
+                  type="text"
+                  id="field-postal"
+                  name="postal"
+                  placeholder="100-0001"
+                  inputmode="numeric"
+                  autocomplete="postal-code"
+                  pattern="\\d{3}-?\\d{4}"
+                >
+              </div>
+              <div class="form-group">
+                <label for="field-address">住所</label>
+                <textarea id="field-address" name="address" rows="2" placeholder="東京都千代田区千代田1-1" autocomplete="street-address"></textarea>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <h2 class="form-section-title">その他</h2>
+              <div class="form-group">
+                <label for="field-exchange-date">名刺交換日</label>
+                <input type="date" id="field-exchange-date" name="exchangeDate">
+              </div>
+              <div class="form-group">
+                <label for="field-memo">メモ</label>
+                <textarea id="field-memo" name="memo" rows="3" placeholder="メモを入力..."></textarea>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="button" id="btn-cancel-edit" class="action-btn outline">キャンセル</button>
+              <button type="submit" id="btn-save-contact" class="action-btn filled">保存する</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- 画面5: 連絡先詳細 -->
+      <section id="screen-detail" class="screen" aria-label="連絡先詳細">
+        <div class="detail-container">
+          <div class="detail-hero">
+            <div class="detail-avatar" id="detail-avatar">山</div>
+            <h2 class="detail-name" id="detail-name">山田 太郎</h2>
+            <p class="detail-kana" id="detail-kana">ヤマダ タロウ</p>
+            <p class="detail-company" id="detail-company">株式会社〇〇 / 営業部 部長</p>
+          </div>
+
+          <div class="detail-actions-bar">
+            <a id="detail-action-call" class="detail-action" href="tel:">
+              <span>電話</span>
+            </a>
+            <a id="detail-action-email" class="detail-action" href="mailto:">
+              <span>メール</span>
+            </a>
+            <a id="detail-action-map" class="detail-action" href="#" target="_blank" rel="noopener noreferrer">
+              <span>地図</span>
+            </a>
+          </div>
+
+          <div class="detail-info-list" id="detail-info-list"></div>
+
+          <div class="detail-bottom-actions">
+            <button id="btn-edit-contact" class="action-btn outline full-width" type="button">編集する</button>
+            <button id="btn-delete-contact" class="action-btn danger full-width" type="button">削除する</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 画面6: 設定 -->
+      <section id="screen-settings" class="screen" aria-label="設定">
+        <div class="edit-container">
+          <h2 class="form-section-title settings-title">設定</h2>
           <div class="form-section">
-            <h3 class="form-section-title">住所</h3>
+            <p class="empty-desc settings-desc">
+              本アプリは高精度な名刺読み取りにGoogleのAI（Gemini）を利用します。<br>
+              ご利用には無料のAPIキーが必要です。
+            </p>
             <div class="form-group">
-              <label for="field-postal">郵便番号</label>
-              <input type="text" id="field-postal" placeholder="100-0001">
+              <label for="field-api-key">Gemini APIキー</label>
+              <input type="password" id="field-api-key" name="apiKey" placeholder="AIzaSy..." autocomplete="off" spellcheck="false">
             </div>
-            <div class="form-group">
-              <label for="field-address">住所</label>
-              <textarea id="field-address" rows="2" placeholder="東京都千代田区千代田1-1"></textarea>
-            </div>
-          </div>
-
-          <div class="form-section">
-            <h3 class="form-section-title">その他</h3>
-            <div class="form-group">
-              <label for="field-exchange-date">名刺交換日</label>
-              <input type="date" id="field-exchange-date">
-            </div>
-            <div class="form-group">
-              <label for="field-memo">メモ</label>
-              <textarea id="field-memo" rows="3" placeholder="メモを入力..."></textarea>
+            <div class="form-actions">
+              <button type="button" id="btn-save-settings" class="action-btn filled">設定を保存</button>
             </div>
           </div>
-
-          <div class="form-actions">
-            <button type="button" id="btn-cancel-edit" class="action-btn outline">キャンセル</button>
-            <button type="submit" id="btn-save-contact" class="action-btn filled">保存する</button>
-          </div>
-        </form>
-      </div>
-    </section>
-
-    <!-- ===== 画面5: 連絡先詳細 ===== -->
-    <section id="screen-detail" class="screen">
-      <div class="detail-container">
-        <div class="detail-hero">
-          <div class="detail-avatar" id="detail-avatar">山</div>
-          <h2 class="detail-name" id="detail-name">山田 太郎</h2>
-          <p class="detail-kana" id="detail-kana">ヤマダ タロウ</p>
-          <p class="detail-company" id="detail-company">株式会社〇〇 / 営業部 部長</p>
         </div>
+      </section>
+    </main>
 
-        <div class="detail-actions-bar">
-          <a id="detail-action-call" class="detail-action" href="tel:">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-            <span>電話</span>
-          </a>
-          <a id="detail-action-email" class="detail-action" href="mailto:">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-            <span>メール</span>
-          </a>
-          <a id="detail-action-map" class="detail-action" href="#" target="_blank">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            <span>地図</span>
-          </a>
-        </div>
-
-        <div class="detail-info-list" id="detail-info-list">
-          <!-- 動的に挿入 -->
-        </div>
-
-        <div class="detail-bottom-actions">
-          <button id="btn-edit-contact" class="action-btn outline full-width">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-            編集する
-          </button>
-          <button id="btn-delete-contact" class="action-btn danger full-width">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-            削除する
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===== 画面6: 設定 ===== -->
-    <section id="screen-settings" class="screen">
-      <div class="edit-container">
-        <h2 class="form-section-title" style="margin-top:0;">設定</h2>
-        <div class="form-section">
-          <p class="empty-desc" style="text-align:left; margin-bottom: 20px;">
-            本アプリは高精度な名刺読み取りにGoogleのAI（Gemini）を利用します。<br>
-            ご利用には無料のAPIキーが必要です。
-          </p>
-          <div class="form-group">
-            <label for="field-api-key">Gemini APIキー</label>
-            <input type="password" id="field-api-key" placeholder="AIzaSy...">
-          </div>
-          <div class="form-actions">
-            <button type="button" id="btn-save-settings" class="action-btn filled">設定を保存</button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===== モーダル: カレンダー登録確認 ===== -->
-    <div id="modal-calendar" class="modal-overlay hidden">
+    <div id="modal-calendar" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="calendar-modal-title">
       <div class="modal-content">
-        <div class="modal-icon">
-          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/></svg>
-        </div>
-        <h3 class="modal-title">Googleカレンダーに登録</h3>
+        <div class="modal-icon" aria-hidden="true"></div>
+        <h3 class="modal-title" id="calendar-modal-title">Googleカレンダーに登録</h3>
         <p class="modal-message">名刺交換日をGoogleカレンダーに<br>登録しますか？</p>
         <div class="modal-date" id="modal-exchange-date"></div>
         <div class="modal-actions">
-          <button id="btn-calendar-no" class="action-btn outline">いいえ (N)</button>
-          <button id="btn-calendar-yes" class="action-btn filled">はい (Y)</button>
+          <button id="btn-calendar-no" class="action-btn outline" type="button">いいえ (N)</button>
+          <button id="btn-calendar-yes" class="action-btn filled" type="button">はい (Y)</button>
         </div>
       </div>
     </div>
 
-    <!-- ===== モーダル: 削除確認 ===== -->
-    <div id="modal-delete" class="modal-overlay hidden">
+    <div id="modal-delete" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="delete-modal-title">
       <div class="modal-content">
-        <div class="modal-icon danger">
-          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
-        </div>
-        <h3 class="modal-title">連絡先を削除</h3>
+        <div class="modal-icon danger" aria-hidden="true"></div>
+        <h3 class="modal-title" id="delete-modal-title">連絡先を削除</h3>
         <p class="modal-message">この連絡先を削除しますか？<br>この操作は取り消せません。</p>
         <div class="modal-actions">
-          <button id="btn-delete-cancel" class="action-btn outline">キャンセル</button>
-          <button id="btn-delete-confirm" class="action-btn danger">削除する</button>
+          <button id="btn-delete-cancel" class="action-btn outline" type="button">キャンセル</button>
+          <button id="btn-delete-confirm" class="action-btn danger" type="button">削除する</button>
         </div>
       </div>
     </div>
 
-    <!-- ===== トースト通知 ===== -->
-    <div id="toast" class="toast hidden">
+    <div id="toast" class="toast hidden" aria-live="polite" aria-atomic="true">
       <span id="toast-message"></span>
     </div>
 
-    <!-- Canvas（カメラキャプチャ用・非表示） -->
-    <canvas id="capture-canvas" style="display:none;"></canvas>
+    <canvas id="capture-canvas" hidden></canvas>
   </div>
 
-  <script src="app.js?v=10"></script>
+  <script src="app.js?v=11" defer></script>
 </body>
 </html>

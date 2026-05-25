@@ -506,7 +506,8 @@ body::before {
 
 .card-guide {
   width: 85%;
-  height: 80%;
+  max-width: 320px;
+  aspect-ratio: 91 / 55;
   border: 2px dashed rgba(124, 106, 239, 0.5);
   border-radius: var(--radius-md);
   animation: guideGlow 2s ease-in-out infinite;

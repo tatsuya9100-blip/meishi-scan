@@ -55,7 +55,8 @@
       capture: $('#screen-capture'),
       processing: $('#screen-processing'),
       edit: $('#screen-edit'),
-      detail: $('#screen-detail')
+      detail: $('#screen-detail'),
+      settings: $('#screen-settings')
     },
     // ホーム
     searchInput: $('#search-input'),
@@ -107,7 +108,11 @@
     btnDeleteConfirm: $('#btn-delete-confirm'),
     // トースト
     toast: $('#toast'),
-    toastMessage: $('#toast-message')
+    toastMessage: $('#toast-message'),
+    // 設定
+    btnSettings: $('#btn-settings'),
+    fieldApiKey: $('#field-api-key'),
+    btnSaveSettings: $('#btn-save-settings')
   };
 
   // ========================================
@@ -227,6 +232,23 @@
   function bindEvents() {
     // 戻るボタン
     dom.btnBack.addEventListener('click', navigateBack);
+
+    // 設定ボタン
+    dom.btnSettings.addEventListener('click', () => {
+      dom.fieldApiKey.value = localStorage.getItem('gemini_api_key') || '';
+      navigateTo('screen-settings');
+    });
+
+    dom.btnSaveSettings.addEventListener('click', () => {
+      const key = dom.fieldApiKey.value.trim();
+      if (key) {
+        localStorage.setItem('gemini_api_key', key);
+        showToast('APIキーを保存しました');
+        navigateBack();
+      } else {
+        showToast('APIキーを入力してください');
+      }
+    });
 
     // ブラウザの戻るボタン対応
     window.addEventListener('popstate', (e) => {
@@ -618,49 +640,104 @@
   }
 
   // ========================================
-  // OCR処理
+  // OCR処理 (Gemini API)
   // ========================================
   async function startOCR() {
-    dom.ocrProgress.style.width = '0%';
-    dom.ocrStatus.textContent = '文字認識エンジンを準備しています...';
+    const apiKey = localStorage.getItem('gemini_api_key');
+    if (!apiKey) {
+      showToast('設定からGemini APIキーを入力してください');
+      dom.ocrStatus.textContent = 'エラー: APIキー未設定';
+      setTimeout(() => {
+        state.editingContactId = null;
+        populateEditForm({});
+        navigateTo('screen-edit');
+      }, 1500);
+      return;
+    }
 
-    let ocrTextFront = '';
-    let ocrTextBack = '';
+    dom.ocrProgress.style.width = '0%';
+    dom.ocrStatus.textContent = 'AIに画像を送信しています...';
 
     try {
-      const worker = await Tesseract.createWorker('jpn+eng', 1, {
-        logger: (m) => {
-          if (m.status === 'recognizing text') {
-            const progress = Math.round(m.progress * 100);
-            dom.ocrProgress.style.width = `${Math.min(progress / 2, 50)}%`;
-            dom.ocrStatus.textContent = `表面を読み取り中... ${Math.min(progress, 100)}%`;
+      const parts = [];
+      const getBase64Data = (dataUrl) => dataUrl.split(',')[1];
+      const getMimeType = (dataUrl) => dataUrl.split(';')[0].split(':')[1];
+
+      if (state.capturedImages.front) {
+        parts.push({
+          inlineData: {
+            mimeType: getMimeType(state.capturedImages.front),
+            data: getBase64Data(state.capturedImages.front)
           }
-        }
+        });
+      }
+
+      if (state.capturedImages.back) {
+        parts.push({
+          inlineData: {
+            mimeType: getMimeType(state.capturedImages.back),
+            data: getBase64Data(state.capturedImages.back)
+          }
+        });
+      }
+
+      parts.push({
+        text: `この名刺画像から以下の情報を正確に読み取って、指定のJSONフォーマットのみを出力してください。
+Markdownのバッククォート（\`\`\`json など）は不要です。必ず純粋なJSONテキストのみを返してください。
+
+{
+  "sei": "姓 (漢字等)",
+  "mei": "名 (漢字等)",
+  "seiKana": "姓 (カタカナ)",
+  "meiKana": "名 (カタカナ)",
+  "company": "会社名 (株式会社なども含める)",
+  "department": "部署名",
+  "position": "役職",
+  "phone": "電話番号 (固定電話)",
+  "mobile": "携帯電話番号",
+  "email": "メールアドレス",
+  "url": "WebサイトURL",
+  "postal": "郵便番号",
+  "address": "住所 (都道府県から)",
+  "memo": "その他読み取れた重要な情報"
+}
+
+読み取れない項目は空文字列 "" にしてください。フリガナがない場合は名前から推測してカタカナで入れてください。`
       });
 
-      // 表面の認識
-      if (state.capturedImages.front) {
-        dom.ocrStatus.textContent = '表面を読み取り中...';
-        const result = await worker.recognize(state.capturedImages.front);
-        ocrTextFront = result.data.text;
-      }
-      dom.ocrProgress.style.width = '50%';
+      dom.ocrProgress.style.width = '30%';
+      dom.ocrStatus.textContent = 'AIが名刺を解析中...';
 
-      // 裏面の認識
-      if (state.capturedImages.back) {
-        dom.ocrStatus.textContent = '裏面を読み取り中...';
-        const result2 = await worker.recognize(state.capturedImages.back);
-        ocrTextBack = result2.data.text;
-      }
-      dom.ocrProgress.style.width = '90%';
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: parts }],
+          generationConfig: {
+            temperature: 0.1,
+            responseMimeType: "application/json"
+          }
+        })
+      });
 
-      await worker.terminate();
+      dom.ocrProgress.style.width = '80%';
+
+      if (!response.ok) {
+        throw new Error(`API Error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const text = data.candidates[0].content.parts[0].text;
+      
+      let parsed = {};
+      try {
+        parsed = JSON.parse(text);
+      } catch(e) {
+        console.error("JSON parse error:", text);
+      }
 
       dom.ocrProgress.style.width = '100%';
       dom.ocrStatus.textContent = '読み取り完了！';
-
-      // OCR結果をパースして編集画面へ
-      const parsed = parseOCRText(ocrTextFront, ocrTextBack);
 
       setTimeout(() => {
         state.editingContactId = null;
@@ -684,7 +761,7 @@
       }, 600);
 
     } catch (err) {
-      console.error('OCRエラー:', err);
+      console.error('AI読み取りエラー:', err);
       dom.ocrStatus.textContent = 'エラーが発生しました。手動で入力してください。';
       setTimeout(() => {
         state.editingContactId = null;
@@ -692,118 +769,6 @@
         navigateTo('screen-edit');
       }, 1500);
     }
-  }
-
-  // ========================================
-  // OCRテキストパーサー
-  // ========================================
-  function parseOCRText(frontText, backText) {
-    const allText = (frontText + '\n' + backText).trim();
-    const lines = allText.split('\n').map(l => l.trim()).filter(Boolean);
-
-    const result = {
-      sei: '',
-      mei: '',
-      seiKana: '',
-      meiKana: '',
-      company: '',
-      department: '',
-      position: '',
-      phone: '',
-      mobile: '',
-      email: '',
-      url: '',
-      postal: '',
-      address: '',
-      exchangeDate: new Date().toISOString().split('T')[0],
-      memo: ''
-    };
-
-    const usedLines = new Set();
-
-    lines.forEach((line, i) => {
-      // メールアドレス
-      const emailMatch = line.match(/[\w.\-+]+@[\w.\-]+\.\w+/);
-      if (emailMatch && !result.email) {
-        result.email = emailMatch[0];
-        usedLines.add(i);
-      }
-
-      // URL
-      const urlMatch = line.match(/https?:\/\/[^\s]+/i);
-      if (urlMatch && !result.url) {
-        result.url = urlMatch[0];
-        usedLines.add(i);
-      }
-
-      // 電話番号（固定電話）
-      const phoneMatch = line.match(/(?:TEL|Tel|tel|電話)?[:\s]?\(?\d{2,4}\)?[-.\s]?\d{2,4}[-.\s]?\d{3,4}/);
-      if (phoneMatch) {
-        const num = phoneMatch[0].replace(/^(?:TEL|Tel|tel|電話)[:\s]?/, '').trim();
-        if (num.match(/^0[789]0/)) {
-          if (!result.mobile) result.mobile = num;
-        } else {
-          if (!result.phone) result.phone = num;
-        }
-        usedLines.add(i);
-      }
-
-      // 郵便番号
-      const postalMatch = line.match(/〒?\s?(\d{3}[-\s]?\d{4})/);
-      if (postalMatch && !result.postal) {
-        result.postal = postalMatch[1];
-        usedLines.add(i);
-      }
-
-      // 住所（都道府県から始まる行）
-      if (line.match(/^(東京都|北海道|(?:京都|大阪)府|.{2,3}県)/) && !result.address) {
-        result.address = line.replace(/〒?\s?\d{3}[-\s]?\d{4}\s?/, '');
-        usedLines.add(i);
-      }
-
-      // 部署・役職
-      if (line.match(/(部|課|室|センター|グループ|チーム)/) && !result.department) {
-        result.department = line;
-        usedLines.add(i);
-      }
-
-      if (line.match(/(代表|社長|部長|課長|係長|主任|取締役|役員|マネージャー|リーダー|ディレクター)/) && !result.position) {
-        result.position = line;
-        usedLines.add(i);
-      }
-
-      // 会社名（株式会社等）
-      if (line.match(/(株式会社|有限会社|合同会社|一般社団法人|NPO|Co\.|Inc\.|Ltd\.|Corp\.)/) && !result.company) {
-        result.company = line;
-        usedLines.add(i);
-      }
-    });
-
-    // フリガナ（カタカナのみの行）
-    lines.forEach((line, i) => {
-      if (usedLines.has(i)) return;
-      if (line.match(/^[ァ-ヶー\s]+$/) && line.length >= 2 && line.length <= 20) {
-        const parts = line.split(/\s+/);
-        if (!result.seiKana) result.seiKana = parts[0] || '';
-        if (!result.meiKana && parts[1]) result.meiKana = parts[1];
-        usedLines.add(i);
-      }
-    });
-
-    // 名前（未使用の短い行で漢字を含む）
-    lines.forEach((line, i) => {
-      if (usedLines.has(i)) return;
-      if (line.match(/[\u4e00-\u9fff]/) && line.length >= 2 && line.length <= 10 && !line.match(/(株|部|課)/)) {
-        const parts = line.split(/\s+/);
-        if (!result.sei) {
-          result.sei = parts[0] || '';
-          if (parts[1]) result.mei = parts[1];
-          usedLines.add(i);
-        }
-      }
-    });
-
-    return result;
   }
 
   // ========================================

@@ -146,6 +146,19 @@
   // ========================================
   function init() {
     try {
+      // 以前のデータの存在と状態を確認するデバッグ用アラート
+      const rawData = localStorage.getItem(STORAGE_KEY);
+      if (rawData && rawData !== '[]') {
+        try {
+          const parsed = JSON.parse(rawData);
+          alert('以前のデータがブラウザに保存されているのを確認しました（件数: ' + parsed.length + '件）。正常に表示されるはずです。');
+        } catch (e) {
+          alert('以前のデータは見つかりましたが、データの形式エラーが発生しています: ' + e.message);
+        }
+      } else {
+        alert('ブラウザに以前のデータが保存されていません（データが空、または別のブラウザ・モードで開いている可能性があります）。');
+      }
+
       setupDOM();
       loadContacts();
       renderContactList();
